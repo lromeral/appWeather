@@ -4,14 +4,14 @@
 //
 //String weatherObjectToJson(WeatherObject data) => json.encode(data.toJson());
 
-class WeatherObject {
+class OpenWeatherForecastObject {
   String cod;
   int message;
   int cnt;
   List<ListElement> list;
   City city;
 
-  WeatherObject({
+  OpenWeatherForecastObject({
     this.cod,
     this.message,
     this.cnt,
@@ -19,7 +19,7 @@ class WeatherObject {
     this.city,
   });
 
-  factory WeatherObject.fromJson(Map<String, dynamic> json) => WeatherObject(
+  factory OpenWeatherForecastObject.fromJson(Map<String, dynamic> json) => OpenWeatherForecastObject(
         cod: json["cod"],
         message: json["message"],
         cnt: json["cnt"],

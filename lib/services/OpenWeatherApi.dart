@@ -3,13 +3,14 @@ import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart';
 import 'dart:convert';
 import 'package:appweather/services/location.dart';
-import 'package:appweather/models/WeatherObject.dart';
+import 'package:appweather/models/OpenWeatherForecastObject.dart';
+import 'package:appweather/models/OpenWeatherCurrentObject.dart';
 
 class OpenWeatherApi {
   Position _myPos = Position();
   static final String apiKey = 'df79bb0a6882db362aa79d760f43183a';
-  Map _weather = {};
-  WeatherObject weatherData;
+  OpenWeatherForecastObject forecastData;
+  OpenWeatherCurrentObject currentData;
 
   OpenWeatherApi();
 
@@ -19,24 +20,28 @@ class OpenWeatherApi {
   }
 
   Future<void> getWeatherForecast() async {
+    Map _data = {};
+
     await _getActualPosition();
     String endPoint =
         'https://api.openweathermap.org/data/2.5/forecast?lat=${this._myPos.latitude}&lon=${this._myPos.longitude}&appid=$apiKey&units=metric&lang=es';
     print(endPoint);
     Response response = await get(endPoint);
-    this._weather = jsonDecode(response.body);
+    _data = jsonDecode(response.body);
 
-    this.weatherData  = WeatherObject.fromJson(this._weather);
+    this.forecastData  = OpenWeatherForecastObject.fromJson(_data);
   }
 
     Future<void> getWeatherCurrent() async {
+    Map _data ={};
+
     await _getActualPosition();
     String endPoint =
         'https://api.openweathermap.org/data/2.5/weather?lat=${this._myPos.latitude}&lon=${this._myPos.longitude}&appid=$apiKey&units=metric&lang=es';
     print(endPoint);
     Response response = await get(endPoint);
-    this._weather = jsonDecode(response.body);
+    _data = jsonDecode(response.body);
 
-    this.weatherData  = WeatherObject.fromJson(this._weather);
+    this.currentData  = OpenWeatherCurrentObject.fromJson(_data);
   }
 }

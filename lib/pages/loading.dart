@@ -1,5 +1,6 @@
+import 'package:appweather/models/Arguments.dart';
 import 'package:flutter/material.dart';
-import 'package:appweather/services/weather.dart';
+import 'package:appweather/services/OpenWeatherApi.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 
@@ -11,9 +12,15 @@ class Loading extends StatefulWidget {
 class _LoadingState extends State<Loading> {
 
   getWeatherData() async{
+    
     OpenWeatherApi instance = OpenWeatherApi();
     await instance.getWeatherForecast();
-    Navigator.pushReplacementNamed(context, '/home', arguments: instance.weatherData);
+    await instance.getWeatherCurrent();
+
+    Argumentos args = Argumentos(forecast: instance.forecastData,current: instance.currentData);
+
+
+    Navigator.pushReplacementNamed(context, '/home', arguments:args);
   }
 
 
