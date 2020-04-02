@@ -15,7 +15,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   OpenWeatherForecastObject forecastData;
   OpenWeatherCurrentObject currentData;
-   RefreshController _refreshController =
+  RefreshController _refreshController =
       RefreshController(initialRefresh: false);
 
   getWeatherData() async {
@@ -24,8 +24,7 @@ class _HomeState extends State<Home> {
     this.forecastData = args.forecast;
   }
 
-  Future<void> _refreshData() async{
-    
+  Future<void> _refreshData() async {
     OpenWeatherApi instance = OpenWeatherApi();
     await instance.getWeatherForecast();
     await instance.getWeatherCurrent();
@@ -39,8 +38,6 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     getWeatherData();
 
-
-
     return Scaffold(
       backgroundColor: Colors.blue,
       appBar: AppBar(
@@ -51,9 +48,11 @@ class _HomeState extends State<Home> {
         backgroundColor: Colors.blue[800],
       ),
       body: SmartRefresher(
-          controller: _refreshController,
-          enablePullDown: true,
-          onRefresh:_refreshData,
+        controller: _refreshController,
+        enablePullDown: true,
+        enablePullUp: false,
+        onRefresh: _refreshData,
+        child: Container(
           child: SafeArea(
             child: Column(
               children: <Widget>[
@@ -75,7 +74,9 @@ class _HomeState extends State<Home> {
                 ),
               ],
             ),
-          )),
+          ),
+        ),
+      ),
     );
   }
 }

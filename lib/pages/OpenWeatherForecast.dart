@@ -102,7 +102,7 @@ class _WeatherWidgetState extends State<OpenWeatherForecastWidget> {
 
               ///////////////ICONOS CENTRALES
               Expanded(
-                flex: 4,
+                flex: 5,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.end,

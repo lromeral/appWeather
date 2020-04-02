@@ -30,9 +30,14 @@ class OpenWeatherApi {
     _data = jsonDecode(response.body);
 
     this.forecastData  = OpenWeatherForecastObject.fromJson(_data);
+
+    print ('getWeatherForecast');
   }
 
     Future<void> getWeatherCurrent() async {
+
+      print ("getWeathercurrent");
+
     Map _data ={};
 
     await _getActualPosition();

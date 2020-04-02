@@ -23,6 +23,10 @@ void main() => runApp(MaterialApp(
         }
         return supportedLocales.first;
       },
+      showPerformanceOverlay: false,
+      showSemanticsDebugger: false,
+      debugShowCheckedModeBanner: true,
+      debugShowMaterialGrid: false,
       initialRoute: '/',
       routes: {
         '/': (context) => Loading(),
