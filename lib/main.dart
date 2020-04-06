@@ -1,3 +1,4 @@
+import 'package:appweather/pages/chooseLocation.dart';
 import 'package:appweather/pages/home.dart';
 import 'package:appweather/pages/loading.dart';
 import 'package:flutter/material.dart';
@@ -31,5 +32,6 @@ void main() => runApp(MaterialApp(
       routes: {
         '/': (context) => Loading(),
         '/home': (context) => Home(),
+        '/editLocation': (context) => CityWidget(),
       },
     ));

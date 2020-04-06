@@ -2,10 +2,12 @@ import 'package:appweather/models/Arguments.dart';
 import 'package:appweather/models/OpenWeatherCurrentObject.dart';
 import 'package:appweather/models/OpenWeatherForecastObject.dart';
 import 'package:appweather/pages/OpenWeatherCurrent.dart';
-import 'package:appweather/services/OpenWeatherApi.dart';
+import 'package:appweather/services/MyGeoLocation.dart';
 import 'package:flutter/material.dart';
 import 'package:appweather/pages/OpenWeatherForecast.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:appweather/services/OpenWeatherApi.dart';
+import 'package:geolocator/geolocator.dart';
+import 'CitySearch.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -15,65 +17,63 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   OpenWeatherForecastObject forecastData;
   OpenWeatherCurrentObject currentData;
-  RefreshController _refreshController =
-      RefreshController(initialRefresh: false);
 
-  getWeatherData() async {
-    Argumentos args = ModalRoute.of(context).settings.arguments;
-    this.currentData = args.current;
-    this.forecastData = args.forecast;
-  }
+  double latitude = 0.0, longitude = 0.0;
 
-  Future<void> _refreshData() async {
-    OpenWeatherApi instance = OpenWeatherApi();
-    await instance.getWeatherForecast();
-    await instance.getWeatherCurrent();
-
-    this.build(context);
-
-    _refreshController.refreshCompleted();
-  }
+  Future<Null> _refreshData() async {}
 
   @override
   Widget build(BuildContext context) {
-    getWeatherData();
+
+    print ('args');
+    Argumentos args = ModalRoute.of(context).settings.arguments;
+
+    String cityName = '';
+    //print ('Args: ${args.forecast.city.name}');
+
+
+     forecastData = args.forecast;
+     currentData = args.current;
 
     return Scaffold(
       backgroundColor: Colors.blue,
       appBar: AppBar(
         title: Text(
-          '${forecastData.city.name}',
+          '$cityName',
         ),
-        centerTitle: true,
+        centerTitle: false,
+        elevation: 0.0,
+        actions: <Widget>[
+          IconButton(
+              icon: Icon(Icons.search),
+              onPressed: () {
+                showSearch(context: context, delegate: CitySearch());
+              }),
+        ],
         backgroundColor: Colors.blue[800],
       ),
-      body: SmartRefresher(
-        controller: _refreshController,
-        enablePullDown: true,
-        enablePullUp: false,
+      body: RefreshIndicator(
         onRefresh: _refreshData,
-        child: Container(
-          child: SafeArea(
-            child: Column(
-              children: <Widget>[
-                OpenWeatherCurrentWidget(
-                  currentData: currentData,
-                ),
-                SizedBox(
-                  height: 10.0,
-                ),
-                Expanded(
-                  child: ListView.builder(
-                      itemCount: forecastData.list.length,
-                      itemBuilder: (context, index) {
-                        return OpenWeatherForecastWidget(
-                          forecastData: this.forecastData,
-                          index: index,
-                        );
-                      }),
-                ),
-              ],
-            ),
+        child: SafeArea(
+          child: Column(
+            children: <Widget>[
+              OpenWeatherCurrentWidget(
+                currentData: currentData,
+              ),
+              SizedBox(
+                height: 10.0,
+              ),
+              Expanded(
+                child: ListView.builder(
+                    itemCount: forecastData.list.length,
+                    itemBuilder: (context, index) {
+                      return OpenWeatherForecastWidget(
+                        forecastData: this.forecastData,
+                        index: index,
+                      );
+                    }),
+              ),
+            ],
           ),
         ),
       ),

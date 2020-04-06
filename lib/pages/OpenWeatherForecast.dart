@@ -46,6 +46,26 @@ class _WeatherWidgetState extends State<OpenWeatherForecastWidget> {
       lluvia = widget.forecastData.list[widget.index].rain.the3H;
     }
 
+    //DIRECCION VIENTO
+
+    String getDirection (int deg){
+
+      String dir="";
+      
+      //NORTH
+      if (deg >= 337.5 && deg < 22.5) dir = 'N';      //N
+      if (deg >= 22.5 && deg < 67.5)  dir= 'NE';//NE
+      if (deg >= 67.5 && deg < 112.5) dir = 'E';  //E
+      
+      if (deg >= 112.5 && deg < 157.5) dir = 'SE';      //SE
+
+      if (deg >= 157.5 && deg < 202.5) dir = 'S';//S
+      if (deg >= 202.5 && deg < 247.5) dir = 'SO';  //SO
+      if (deg >= 247.5 && deg < 292.5) dir = 'O';      //O
+      if (deg >= 292.5 && deg < 337.5) dir = 'NO';//NO
+
+    return dir;
+    }
     return Card(
       child: Column(
         children: <Widget>[
@@ -90,8 +110,6 @@ class _WeatherWidgetState extends State<OpenWeatherForecastWidget> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    // Text(
-                    //     '${DateFormat('EEEE', 'es').format(DateTime.fromMillisecondsSinceEpoch((widget.forecastData.list[widget.index].dt) * 1000))}'),
                     Text(
                       '${DateFormat('Hm', 'es').format(DateTime.fromMillisecondsSinceEpoch((widget.forecastData.list[widget.index].dt) * 1000))}',
                       style: TextStyle(fontSize: 20.0),
@@ -103,53 +121,107 @@ class _WeatherWidgetState extends State<OpenWeatherForecastWidget> {
               ///////////////ICONOS CENTRALES
               Expanded(
                 flex: 5,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: <Widget>[
-                    Column(
-                      children: <Widget>[
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Icon(WeatherIcons.humidity,
-                                size: 11, color: Colors.grey),
-                            Text(
-                                '${widget.forecastData.list[widget.index].main.humidity}%Hr', style: TextStyle(fontSize: 12.0),),
-                            Icon(
-                              WeatherIcons.cloud,
-                              size: 12.0,
-                              color: Colors.grey,
-                            ),
-                            Text(
-                                '${widget.forecastData.list[widget.index].clouds.all}%', style: TextStyle(fontSize: 12.0),),
-                          ],
-                        ),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                child: Padding(
+                  padding: const EdgeInsets.all(5),
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        Icon(
-                          WeatherIcons.strong_wind,
-                          size: 12,
-                          color: Colors.grey,
+                        Expanded(
+                          child: Column(
+                            children: <Widget>[
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Icon(
+                                        WeatherIcons.humidity,
+                                        size: 11,
+                                        color: Colors.grey,
+                                      ),
+                                      Icon(
+                                        WeatherIcons.cloud,
+                                        size: 12.0,
+                                        color: Colors.grey,
+                                      ),
+                                    ],
+                                  )
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Icon(
+                                        WeatherIcons.strong_wind,
+                                        size: 12,
+                                        color: Colors.grey,
+                                      ),
+                                      Icon(
+                                        WeatherIcons.rain,
+                                        size: 12,
+                                        color: Colors.grey,
+                                      ),
+                                    ],
+                                  )
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
-                        Text(
-                          '${(widget.forecastData.list[widget.index].wind.speed * 3.6).toStringAsFixed(0)}km/h',
-                          style: TextStyle(fontSize: 12.0),
+                        Expanded(
+                          child: Column(
+                            children: <Widget>[
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: <Widget>[
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Text(
+                                        '${widget.forecastData.list[widget.index].main.humidity}%Hr',
+                                        style: TextStyle(fontSize: 12.0),
+                                      ),
+                                      Text(
+                                        '${widget.forecastData.list[widget.index].clouds.all}%',
+                                        style: TextStyle(
+                                          fontSize: 12.0
+                                          ),
+                                      ),
+                                    ],
+                                  )
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: <Widget>[
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                          Text(
+                                            '${(widget.forecastData.list[widget.index].wind.speed * 3.6).toStringAsFixed(0)}km/h ${getDirection(widget.forecastData.list[widget.index].wind.deg)}',
+                                            style: TextStyle(fontSize: 12.0),
+                                          ),
+                                      if (lluvia==0)
+                                      Text('$lluvia mm',style: TextStyle(fontSize: 12.0),
+                                      ),
+                                      if (lluvia>0 ) Text('$lluvia mm',style: TextStyle(fontSize: 12.0, color: Colors.blueAccent),),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
-                        Icon(
-                          WeatherIcons.rain,
-                          size: 12,
-                          color: Colors.grey,
-                        ),
-                        Text('$lluvia mm', style: TextStyle(fontSize: 12.0),),
-                      ],
-                    ),
-                  ],
+                      ]),
                 ),
               ),
               Expanded(

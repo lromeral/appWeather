@@ -1,7 +1,9 @@
 import 'package:appweather/models/Arguments.dart';
+import 'package:appweather/services/MyGeoLocation.dart';
 import 'package:flutter/material.dart';
 import 'package:appweather/services/OpenWeatherApi.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:geolocator/geolocator.dart';
 
 
 class Loading extends StatefulWidget {
@@ -11,17 +13,25 @@ class Loading extends StatefulWidget {
 
 class _LoadingState extends State<Loading> {
 
+  MyGeoLocation myLoc = MyGeoLocation();
+
   getWeatherData() async{
-    
+
+    Position pos= await myLoc.getPosition();
+
+
+
     OpenWeatherApi instance = OpenWeatherApi();
-    await instance.getWeatherForecast();
-    await instance.getWeatherCurrent();
+    await instance.getWeatherForecast(pos.latitude, pos.longitude);
+    await instance.getWeatherCurrent(pos.latitude, pos.latitude);
 
     Argumentos args = Argumentos(forecast: instance.forecastData,current: instance.currentData);
 
 
     Navigator.pushReplacementNamed(context, '/home', arguments:args);
   }
+
+
 
 
   @override
